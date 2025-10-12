@@ -14,7 +14,13 @@ import http.client
 
 from . import implementation
 
+
 def register_tools() -> dict['ToolHandler']:
+    """Semi-automatic tool registrar.
+
+    Each new tool needs to be added to the list below (for now).
+    """
+
     tools = {}
 
     def add_tool(tool: ToolHandler):
@@ -26,7 +32,10 @@ def register_tools() -> dict['ToolHandler']:
 
     return tools
 
+
 class ToolHandler():
+    """Base class, inspired by mcp-obsidian."""
+
     def __init__(self, tool_name: str):
         self.name = tool_name
         self.vault_path = Path(os.getenv("VAULT_PATH"))
@@ -37,12 +46,14 @@ class ToolHandler():
     def run_tool(self, args: dict) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
         raise NotImplementedError()
 
+
 class MoveFileTool(ToolHandler):
     def __init__(self):
         super().__init__("move_file")
 
     def get_tool_description(self) -> Tool:
         """Define the move_file tool."""
+
         return Tool(
             name=self.name,
             description="Move a file from one path to another",
@@ -64,6 +75,7 @@ class MoveFileTool(ToolHandler):
 
     def run_tool(self, args: dict) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
         """Handle move_file tool calls."""
+
         config_path = ".obsidian/plugins/obsidian-local-rest-api/data.json"
         path_from = args['from_path']
         path_to = args['to_path']
@@ -75,9 +87,12 @@ class MoveFileTool(ToolHandler):
         dest_encoded = urllib.parse.quote(path_to)
 
         # Disable SSL verification (like curl -k)
+        # This is because the plugin uses self-signed certificates for the https communication.
         context = ssl._create_unverified_context()
 
         conn = http.client.HTTPSConnection("localhost", 27124, context=context)
+        # TODO make the connection details configurable
+
         headers = {
             "Authorization": f"Bearer {api_token}",
             "Destination": dest_encoded,
@@ -89,7 +104,7 @@ class MoveFileTool(ToolHandler):
         res = f"Status: {response.status} {response.reason}"
         body = response.read().decode()
         if body:
-            res += "\n"+body
+            res += "\n" + body
 
         conn.close()
 
@@ -102,6 +117,7 @@ class ListHeadingsTool(ToolHandler):
 
     def get_tool_description(self) -> Tool:
         """Define the list_headings tool."""
+
         return Tool(
             name=self.name,
             description="List all headings in a markdown file",
@@ -119,6 +135,7 @@ class ListHeadingsTool(ToolHandler):
 
     def run_tool(self, args: dict) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
         """Handle list_headings tool calls."""
+
         res = implementation.list_headings(self.vault_path / args['file_path'])
         formatted = "\n".join(f"{level} {title}" for level, title in res)
         return [TextContent(type="text", text=formatted)]
@@ -151,5 +168,7 @@ class NailHeadingTool(ToolHandler):
 
     def run_tool(self, args: dict) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
         """Handle nail_heading tool calls."""
+
         res = implementation.nail_heading(self.vault_path / args['file_path'], args['heading'])
         return [TextContent(type="text", text=res)]
+
