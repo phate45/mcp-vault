@@ -19,6 +19,9 @@ For the `move_file` functionality, I'm relying on a fork of the plugin (from an 
 - The custom impl (base of the PR): https://github.com/mairas/obsidian-local-rest-api/tree/move-only
 
 To properly use this MCP server as a whole (for now), you need to clone, compile and use the 'move-only' branch of the fork.
+See [USAGE](./USAGE.md) for more details.
+
+Note that the heading operations that support mcp-obsidian's patch_content tool work without this custom modification.
 
 ## Prerequisites
 
