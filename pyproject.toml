@@ -1,0 +1,29 @@
+[project]
+name = "mcp-vault"
+version = "0.1.0"
+description = "MCP server that interacts with an Obsidian Vault directly on the filesystem (or indirectly via the REST API community plugin)"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "phate45", email = "[redacted]" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "mcp>=1.17.0",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.13",
+]
+keywords = ["mcp", "obsidian", "markdown", "model-context-protocol"]
+
+[project.scripts]
+mcp-vault = "mcp_vault:main"
+
+[project.urls]
+Homepage = "https://github.com/phate45/mcp-vault"
+Repository = "https://github.com/phate45/mcp-vault"
+Issues = "https://github.com/phate45/mcp-vault/issues"
+
