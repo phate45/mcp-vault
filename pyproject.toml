@@ -5,7 +5,7 @@ description = "MCP server that interacts with an Obsidian Vault directly on the 
 readme = "README.md"
 license = { text = "MIT" }
 authors = [
-    { name = "phate45", email = "[redacted]" }
+    { name = "phate45", email = "redacted@email.domain" }
 ]
 requires-python = ">=3.13"
 dependencies = [

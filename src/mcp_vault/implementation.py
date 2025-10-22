@@ -68,6 +68,63 @@ def nail_heading(path: Path, heading: str):
     return "::".join(chain)
 
 
+def get_recent_dailies(vault_path: Path, limit: int = 7, include_content: bool = False) -> str:
+    """Get the most recent daily notes from the vault.
+
+    Args:
+        vault_path: Path to the vault root
+        limit: Maximum number of daily notes to return (default: 7)
+        include_content: Whether to include note content (default: False)
+
+    Returns:
+        Formatted string with daily note paths or content
+    """
+    from datetime import datetime
+
+    # Get today's date in YYYY-MM-DD format
+    today = datetime.now().strftime("%Y-%m-%d")
+    today_path = vault_path / "00_Inbox" / f"{today}.md"
+
+    # Get all daily notes from the archive folder
+    dailies_folder = vault_path / "06_Metadata" / "Dailies"
+    daily_files = []
+
+    if dailies_folder.exists():
+        daily_files = sorted(
+            [f for f in dailies_folder.glob("*.md")],
+            key=lambda f: f.stem,  # Sort by filename (which is the date)
+            reverse=True  # Most recent first
+        )
+
+    # Take the most recent (limit - 1) archived dailies
+    # We reserve one spot for today's note
+    recent_archived = daily_files[:limit - 1] if len(daily_files) >= limit - 1 else daily_files
+
+    # Build the result list: today's note + recent archived notes
+    result_files = []
+    if today_path.exists():
+        result_files.append(today_path)
+    result_files.extend(recent_archived)
+
+    # Limit to the requested number
+    result_files = result_files[:limit]
+
+    # Format output
+    if include_content:
+        # Return full content of each file
+        output_parts = []
+        for file_path in result_files:
+            relative_path = file_path.relative_to(vault_path)
+            content = file_path.read_text(encoding="utf-8")
+            output_parts.append(f"=== {relative_path} ===\n{content}\n")
+
+        return "\n".join(output_parts)
+    else:
+        # Return just the file paths
+        relative_paths = [str(f.relative_to(vault_path)) for f in result_files]
+        return "\n".join(relative_paths)
+
+
 if __name__ == "__main__":
     # quick and dirty testing implement
     # TODO add proper tests, yeah?
