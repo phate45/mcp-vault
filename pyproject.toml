@@ -1,6 +1,6 @@
 [project]
 name = "mcp-vault"
-version = "0.1.0"
+version = "0.2.0"
 description = "MCP server that interacts with an Obsidian Vault directly on the filesystem (or indirectly via the REST API community plugin)"
 readme = "README.md"
 license = { text = "MIT" }
@@ -21,6 +21,12 @@ keywords = ["mcp", "obsidian", "markdown", "model-context-protocol"]
 
 [project.scripts]
 mcp-vault = "mcp_vault:main"
+mcp-vault-query = "mcp_vault.tasks.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/phate45/mcp-vault"
