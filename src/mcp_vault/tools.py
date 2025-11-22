@@ -41,8 +41,8 @@ def register_tools(context: ToolContext) -> dict['ToolHandler']:
         tools[tool.name] = tool
 
     add_tool(MoveFileTool(context))
-    add_tool(ListHeadingsTool(context))
-    add_tool(NailHeadingTool(context))
+    # add_tool(ListHeadingsTool(context))
+    # add_tool(NailHeadingTool(context))
     add_tool(AppendToHeadingTool(context))
     add_tool(SimpleSearchTool(context))
     add_tool(ComplexSearchTool(context))
